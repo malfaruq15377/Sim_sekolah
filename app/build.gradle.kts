@@ -9,6 +9,10 @@ android {
         version = release(36)
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.simsekolah"
         minSdk = 26
@@ -35,6 +39,8 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+
 }
 
 dependencies {
