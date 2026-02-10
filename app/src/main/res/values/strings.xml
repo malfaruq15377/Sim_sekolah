@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">SIM Sekolah</string>
     
-    // String di layout Register
+    // String di layout login dan register
     <string name="hello">HELLO!</string>
     <string name="welcome">WELCOME TO SIM SCHOOLS</string>
     <string name="username">Username</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="for_sign_in">Login For Sign In</string>
+    <string name="sign_up">Sign Up</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="sign_in">Sign In</string>
     <string name="or">──────── Sign Up with ────────</string>
