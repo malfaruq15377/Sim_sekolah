@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SIM Sekolah</string>
-    
+
     // String di layout login dan register
     <string name="hello">HELLO!</string>
     <string name="welcome">WELCOME TO SIM SCHOOLS</string>

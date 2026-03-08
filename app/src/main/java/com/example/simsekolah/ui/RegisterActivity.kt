@@ -1,12 +1,10 @@
-package com.example.simsekolah
+package com.example.simsekolah.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.simsekolah.R
 import com.example.simsekolah.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
