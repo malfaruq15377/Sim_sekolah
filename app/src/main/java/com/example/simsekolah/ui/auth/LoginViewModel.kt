@@ -32,7 +32,6 @@ class LoginViewModel(private val repository: SchoolRepository) : ViewModel() {
                 if (role == "guru") {
                     repository.getGuru().collect { response ->
                         if (response.success) {
-                            // Mencari guru yang sesuai dengan username DAN passwordInput
                             val guru = response.data.find { (it.email == username || it.nip == username) && it.password == passwordInput }
                             if (guru != null) {
                                 _loginResult.value = Result.success(UserModel(name = guru.nama, email = guru.email, role = "guru"))
@@ -44,7 +43,6 @@ class LoginViewModel(private val repository: SchoolRepository) : ViewModel() {
                 } else {
                     repository.getSiswa().collect { response ->
                         if (response.success) {
-                            // Mencari murid yang sesuai dengan username DAN passwordInput
                             val murid = response.data.find { (it.email == username || it.nama.equals(username, ignoreCase = true)) && it.password == passwordInput }
                             if (murid != null) {
                                 _loginResult.value = Result.success(UserModel(name = murid.nama, email = murid.email, role = "murid"))

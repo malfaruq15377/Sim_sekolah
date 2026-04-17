@@ -65,13 +65,7 @@ class LoginActivity : AppCompatActivity() {
 
             viewModel.login(usernameInput, role, role)
         }
-
-        binding.createAccountRegis.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
     }
-
     private fun observeViewModel() {
         viewModel.isLoading.observe(this) { isLoading ->
             showLoading(isLoading)

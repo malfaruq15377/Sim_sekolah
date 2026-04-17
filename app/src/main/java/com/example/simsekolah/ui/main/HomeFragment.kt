@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.simsekolah.R
 import com.example.simsekolah.adapter.BannerAdapter
+import com.example.simsekolah.adapter.FeesImageAdapter
 import com.example.simsekolah.adapter.TugasAdapter
 import com.example.simsekolah.data.model.TugasModel
 import com.example.simsekolah.databinding.FragmentHomeBinding
@@ -110,8 +111,11 @@ class HomeFragment : Fragment() {
         runnable = object : Runnable {
             override fun run() {
                 _binding?.let {
-                    val nextItem = (it.viewPagerBanner.currentItem + 1) % bannerList.size
-                    it.viewPagerBanner.currentItem = nextItem
+                    val itemCount = it.viewPagerBanner.adapter?.itemCount ?: 0
+                    if (itemCount > 0) {
+                        val nextItem = (it.viewPagerBanner.currentItem + 1) % itemCount
+                        it.viewPagerBanner.setCurrentItem(nextItem, true)
+                    }
                     handler.postDelayed(this, 3000)
                 }
             }
@@ -121,8 +125,7 @@ class HomeFragment : Fragment() {
 
     private fun setupMenu() {
         binding.menuAssignments.setOnClickListener {
-            // Sesuaikan ID tujuan navigasi dengan nav_graph Anda jika perlu
-            // findNavController().navigate(R.id.action_home_to_assignments)
+            findNavController().navigate(R.id.assignmentsFragment)
         }
 
         binding.menuEvent.setOnClickListener {
@@ -130,7 +133,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.menuFees.setOnClickListener {
-            // findNavController().navigate(R.id.feesFragment)
+            findNavController().navigate(R.id.feesFragment)
         }
 
         binding.ivProfile.setOnClickListener {

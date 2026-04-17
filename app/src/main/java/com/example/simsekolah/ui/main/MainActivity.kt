@@ -1,7 +1,12 @@
 package com.example.simsekolah.ui.main
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
@@ -15,21 +20,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. PINDAHKAN INI KE ATAS: Inflate dan Set Content View harus pertama kali
+        // Membuat Status Bar Transparan dan menyatu dengan konten (Edge-to-Edge)
+        makeStatusBarTransparent()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. SETUP Navigation Component
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Hubungkan Bottom Navigation dengan NavController
         binding.bottomNavigation.setupWithNavController(navController)
 
-        // Override Listener untuk menangani navigasi khusus (jika diperlukan)
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             val handled = NavigationUI.onNavDestinationSelected(item, navController)
-
             if (item.itemId == R.id.homeFragment && navController.currentDestination?.id != R.id.homeFragment) {
                 navController.popBackStack(R.id.homeFragment, false)
             }
@@ -40,6 +43,17 @@ class MainActivity : AppCompatActivity() {
             if (item.itemId == R.id.homeFragment) {
                 navController.popBackStack(R.id.homeFragment, false)
             }
+        }
+    }
+
+    private fun makeStatusBarTransparent() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        
+        // Membuat icon status bar menjadi gelap atau terang menyesuaikan konten (opsional)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val decor = window.decorView
+            // decor.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Gunakan jika background terang
         }
     }
 }
