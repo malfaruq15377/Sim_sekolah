@@ -58,7 +58,7 @@
                 android:id="@+id/tvSchoolNameBanner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SMK Negeri 1 Jakarta"
+                android:text="Pesantren PeTIK Depok"
                 android:textColor="#1A1C1E"
                 android:textSize="26sp"
                 android:textStyle="bold" />
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:lineSpacingExtra="4dp"
-                android:text="SMK Negeri 1 Jakarta adalah sekolah kejuruan model unggulan di Indonesia yang berfokus pada teknologi dan manajemen. Kami berkomitmen untuk mencetak lulusan yang siap kerja dan memiliki integritas tinggi."
+                android:text="Pesantren Teknologi Informasi dan Komunikasi bermula dari keberadaan Lembaga Amil Zakat Infaq dan Shodaqoh PT PLN (Persero) Kantor Pusat (LAZIS PT PLN (Persero) Kantor Pusat)  yang dibentuk berdasarkan Keputusan Direksi Nomor 132.K/DIR/2006 Tanggal 11 September 2006 untuk mengelola dana zakat, infaq/ shodaqoh pegawai PLN Pusat"
                 android:textColor="#495057"
                 android:textSize="14sp" />
 
@@ -197,7 +197,7 @@
                                 android:id="@+id/tvEmail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="info@smkn1jakarta.sch.id"
+                                android:text="pesantrenpeikdepok@gmail.com"
                                 android:textColor="#1A1C1E"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
@@ -231,7 +231,7 @@
                                 android:id="@+id/tvAddress"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Jl. Budi Utomo No.7, Sawah Besar, Jakarta Pusat"
+                                android:text="Depok. Sekretariat. Jl. Mandor Basar No.54, Rangkapan Jaya, Kec. Pancoran Mas, Kota Depok, Jawa Barat 16434"
                                 android:textColor="#1A1C1E"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
