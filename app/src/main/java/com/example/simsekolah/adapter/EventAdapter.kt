@@ -4,13 +4,16 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.simsekolah.R
 import com.example.simsekolah.data.model.EventModel
 
-class EventAdapter(private val eventList: List<EventModel>) :
-    RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
+class EventAdapter(
+    private var eventList: List<EventModel>,
+    private val onDeleteClick: (EventModel) -> Unit
+) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvDayNumber: TextView = view.findViewById(R.id.tvDayNumber)
@@ -19,6 +22,7 @@ class EventAdapter(private val eventList: List<EventModel>) :
         val tvEventTime: TextView = view.findViewById(R.id.tvEventTime)
         val tvEventLocation: TextView = view.findViewById(R.id.tvEventLocation)
         val viewIndicator: View = view.findViewById(R.id.viewIndicator)
+        val btnDelete: ImageView = view.findViewById(R.id.btnDeleteEvent)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
@@ -35,11 +39,19 @@ class EventAdapter(private val eventList: List<EventModel>) :
         holder.tvEventTime.text = event.time
         holder.tvEventLocation.text = event.location
         
-        // Set warna indikator secara dinamis
         if (event.color != 0) {
             holder.viewIndicator.backgroundTintList = ColorStateList.valueOf(event.color)
+        }
+
+        holder.btnDelete.setOnClickListener {
+            onDeleteClick(event)
         }
     }
 
     override fun getItemCount(): Int = eventList.size
+
+    fun updateList(newList: List<EventModel>) {
+        eventList = newList
+        notifyDataSetChanged()
+    }
 }

@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.simsekolah.data.remote.repository.AbsensiItem
 import com.example.simsekolah.data.remote.repository.SchoolRepository
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AttendanceViewModel(private val repository: SchoolRepository) : ViewModel() {
 
@@ -18,6 +21,9 @@ class AttendanceViewModel(private val repository: SchoolRepository) : ViewModel(
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
+
+    private val _postResult = MutableLiveData<Boolean>()
+    val postResult: LiveData<Boolean> = _postResult
 
     fun fetchAttendance() {
         _isLoading.value = true
@@ -32,6 +38,39 @@ class AttendanceViewModel(private val repository: SchoolRepository) : ViewModel(
                 }
             } catch (e: Exception) {
                 _errorMessage.value = e.message ?: "Terjadi kesalahan"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun postAttendance(status: String, keterangan: String, userName: String) {
+        _isLoading.value = true
+        viewModelScope.launch {
+            try {
+                // Untuk sementara kita manipulasi list lokal agar langsung muncul di UI (Mocking)
+                // Kita simpan nama di field keterangan atau bisa tambahkan field baru jika mau
+                // Di sini saya simpan nama di awal keterangan agar bisa diparsing di Adapter
+                val currentList = _attendanceList.value?.toMutableList() ?: mutableListOf()
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                
+                // Format: "NAMA_USER|KETERANGAN_ASLI"
+                val combinedData = "$userName|$keterangan"
+                
+                val newItem = AbsensiItem(
+                    id = System.currentTimeMillis().toString(),
+                    muridId = "1", 
+                    tanggal = sdf.format(Date()),
+                    status = status,
+                    keterangan = combinedData
+                )
+                currentList.add(0, newItem)
+                _attendanceList.value = currentList
+                _postResult.value = true
+                
+            } catch (e: Exception) {
+                _errorMessage.value = e.message
+                _postResult.value = false
             } finally {
                 _isLoading.value = false
             }

@@ -1,5 +1,7 @@
 package com.example.simsekolah.adapter
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import com.example.simsekolah.R
 
 class CalendarAdapter(
     private val dates: List<Int>,
+    private val eventColors: Map<Int, Int> = emptyMap(),
     private val onClick: (Int) -> Unit
 ) : RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
 
@@ -28,14 +31,24 @@ class CalendarAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val date = dates[position]
-
         holder.tvDate.text = date.toString()
 
-        // Style selected
+        val eventColor = eventColors[date]
+
+        // Reset state ke default
+        holder.tvDate.background = null
+        holder.tvDate.setBackgroundResource(R.drawable.bg_date)
+        holder.tvDate.setTextColor(Color.parseColor("#1A1C1E"))
+
         if (position == selectedPosition) {
             holder.tvDate.setBackgroundResource(R.drawable.bg_selected)
-        } else {
-            holder.tvDate.setBackgroundResource(R.drawable.bg_date)
+            holder.tvDate.setTextColor(Color.WHITE)
+        } else if (eventColor != null) {
+            val shape = GradientDrawable()
+            shape.shape = GradientDrawable.OVAL
+            shape.setColor(eventColor)
+            holder.tvDate.background = shape
+            holder.tvDate.setTextColor(Color.WHITE)
         }
 
         holder.itemView.setOnClickListener {

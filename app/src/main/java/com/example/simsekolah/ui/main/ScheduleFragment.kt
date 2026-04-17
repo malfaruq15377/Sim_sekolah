@@ -8,11 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.simsekolah.R
-import com.example.simsekolah.adapter.ScheduleAdapter
+import com.example.simsekolah.adapter.DayScheduleAdapter
 import com.example.simsekolah.databinding.FragmentScheduleBinding
-import com.example.simsekolah.ui.ViewModelFactory
-import com.google.android.material.chip.Chip
+import com.example.simsekolah.data.model.ViewModelFactory
 
 class ScheduleFragment : Fragment() {
 
@@ -23,7 +21,7 @@ class ScheduleFragment : Fragment() {
         ViewModelFactory.getInstance()
     }
 
-    private lateinit var scheduleAdapter: ScheduleAdapter
+    private lateinit var dayScheduleAdapter: DayScheduleAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
@@ -34,40 +32,26 @@ class ScheduleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        setupChipGroup()
         observeViewModel()
 
         viewModel.fetchSchedule()
     }
 
     private fun setupRecyclerView() {
-        scheduleAdapter = ScheduleAdapter(emptyList())
-        binding.rvSchedule.apply {
+        dayScheduleAdapter = DayScheduleAdapter(emptyList())
+        binding.rvDays.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = scheduleAdapter
-            setHasFixedSize(true)
-        }
-    }
-
-    private fun setupChipGroup() {
-        binding.chipGroupDays.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val chip = group.findViewById<Chip>(checkedIds[0])
-                val day = chip.text.toString()
-                viewModel.filterByDay(day)
-            } else {
-                viewModel.filterByDay("All")
-            }
+            adapter = dayScheduleAdapter
         }
     }
 
     private fun observeViewModel() {
-        viewModel.scheduleList.observe(viewLifecycleOwner) { list ->
-            scheduleAdapter.updateData(list)
+        viewModel.dayScheduleList.observe(viewLifecycleOwner) { list ->
+            dayScheduleAdapter.updateData(list)
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-//            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->

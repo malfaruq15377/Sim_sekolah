@@ -1,10 +1,12 @@
 package com.example.simsekolah.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.simsekolah.data.model.TugasModel
 import com.example.simsekolah.databinding.ItemTugasBinding
+import com.example.simsekolah.ui.main.SubmitTugasActivity
 
 class TugasAdapter(private val listTugas: List<TugasModel>) :
     RecyclerView.Adapter<TugasAdapter.TugasViewHolder>() {
@@ -24,6 +26,12 @@ class TugasAdapter(private val listTugas: List<TugasModel>) :
             tvTime.text = data.time
             tvTitle.text = data.title
             tvDeskripsi.text = data.description
+            
+            root.setOnClickListener {
+                val intent = Intent(it.context, SubmitTugasActivity::class.java)
+                intent.putExtra("EXTRA_TUGAS", data)
+                it.context.startActivity(intent)
+            }
         }
     }
 

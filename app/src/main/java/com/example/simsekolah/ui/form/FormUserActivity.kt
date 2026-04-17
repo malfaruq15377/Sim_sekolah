@@ -58,39 +58,57 @@ class FormUserActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnChange.text = btnTitle
         binding.etBirth.setOnClickListener {
             showDatePickerDialog()
-            }
+        }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val date = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
+                binding.etBirth.setText(date)
+                
+                val age = calculateAge(selectedYear, selectedMonth, selectedDay)
+                binding.etAge.setText(age.toString())
+            },
+            year, month, day
+        )
+        datePickerDialog.show()
+    }
+
+    private fun calculateAge(year: Int, month: Int, day: Int): Int {
+        val dob = Calendar.getInstance()
+        val today = Calendar.getInstance()
+
+        dob.set(year, month, day)
+
+        var age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR)
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+            age--
         }
 
-        private fun showDatePickerDialog() {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePickerDialog = DatePickerDialog(
-                this,
-                { _, selectedYear, selectedMonth, selectedDay ->
-                    val date = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                    binding.etBirth.setText(date)
-                },
-                year, month, day
-            )
-            datePickerDialog.show()
-        }
+        return if (age < 0) 0 else age
+    }
 
     private fun showEditForm(userModel: UserModel) {
         with(binding) {
             etName.setText(userModel.name)
-            etEmail.setText(userModel.email)
-            etAge.setText(userModel.age.toString())
-            etPhone.setText(userModel.noPhone)
-            etAddress.setText(userModel.address)
             etMajor.setText(userModel.major)
             etFatherName.setText(userModel.fatherName)
             etMotherName.setText(userModel.motherName)
+            etPhone.setText(userModel.noPhone)
+            etEmail.setText(userModel.email)
+            etAddress.setText(userModel.address)
+            etBirth.setText(userModel.dateOfBirth)
+            etAge.setText(userModel.age.toString())
             etHeight.setText(userModel.height.toString())
             etWeight.setText(userModel.weight.toString())
-            etBirth.setText(userModel.dateOfBirth)
         }
     }
 

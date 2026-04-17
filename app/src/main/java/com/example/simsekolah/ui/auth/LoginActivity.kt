@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.simsekolah.R
 import com.example.simsekolah.data.local.UserPreference
 import com.example.simsekolah.databinding.ActivityLoginBinding
-import com.example.simsekolah.ui.ViewModelFactory
+import com.example.simsekolah.data.model.ViewModelFactory
 import com.example.simsekolah.ui.main.MainActivity
 
 class LoginActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.simsekolah.ui
+package com.example.simsekolah.data.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -30,7 +30,7 @@ class ViewModelFactory(private val repository: SchoolRepository) : ViewModelProv
         fun getInstance(): ViewModelFactory =
             instance ?: synchronized(this) {
                 val apiService = ApiConfig.getApiService()
-                val repository = SchoolRepository.getInstance(apiService)
+                val repository = SchoolRepository.Companion.getInstance(apiService)
                 instance ?: ViewModelFactory(repository)
             }.also { instance = it }
     }

@@ -16,8 +16,9 @@
         android:padding="16dp">
 
         <View
+            android:id="@+id/viewStatusIndicator"
             android:layout_width="4dp"
-            android:layout_height="40dp"
+            android:layout_height="80dp"
             android:background="@color/md_theme_light_primary" />
 
         <LinearLayout
@@ -27,6 +28,17 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+
+            <TextView
+                android:id="@+id/tvHistoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="Name"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/tvHistoryDate"
                 android:layout_width="wrap_content"
@@ -34,7 +46,7 @@
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="19 Mei 2024"
                 android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textSize="10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -42,9 +54,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/plus_jakarta_sans"
-                android:text="Hadir Tepat Waktu"
+                android:text="Hadir"
                 android:textColor="@color/md_theme_light_onSurfaceVariant"
                 android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvHistoryDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="Tepat Waktu"
+                android:textColor="#666666"
+                android:textSize="11sp"
+                android:layout_marginTop="2dp"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <TextView

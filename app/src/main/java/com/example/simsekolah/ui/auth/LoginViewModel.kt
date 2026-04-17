@@ -16,34 +16,40 @@ class LoginViewModel(private val repository: SchoolRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // C:/Users/PC-1/Documents/SIM sekolah/SIM Sekolah/SIM-Sekolah/app/src/main/java/com/example/simsekolah/ui/auth/LoginViewModel.kt
-
     fun login(username: String, passwordInput: String, role: String) {
+        if (username.isEmpty()) {
+            _loginResult.value = Result.failure(Exception("Username tidak boleh kosong"))
+            return
+        }
+        if (passwordInput.isEmpty()) {
+            _loginResult.value = Result.failure(Exception("Password tidak boleh kosong"))
+            return
+        }
+
         _isLoading.value = true
         viewModelScope.launch {
             try {
                 if (role == "guru") {
                     repository.getGuru().collect { response ->
                         if (response.success) {
-                            // Cari guru berdasarkan email atau NIP
-                            val guru = response.data.find { it.email == username || it.nip == username }
+                            // Mencari guru yang sesuai dengan username DAN passwordInput
+                            val guru = response.data.find { (it.email == username || it.nip == username) && it.password == passwordInput }
                             if (guru != null) {
-                                // Untuk bypass hash password sementara (untuk testing)
                                 _loginResult.value = Result.success(UserModel(name = guru.nama, email = guru.email, role = "guru"))
                             } else {
-                                _loginResult.value = Result.failure(Exception("Akun tidak ditemukan"))
+                                _loginResult.value = Result.failure(Exception("Email/NIP atau password salah"))
                             }
                         }
                     }
                 } else {
                     repository.getSiswa().collect { response ->
                         if (response.success) {
-                            // GANTI it.nisn JADI it.email karena di API tidak ada nisn
-                            val murid = response.data.find { it.email == username || it.nama.equals(username, ignoreCase = true) }
+                            // Mencari murid yang sesuai dengan username DAN passwordInput
+                            val murid = response.data.find { (it.email == username || it.nama.equals(username, ignoreCase = true)) && it.password == passwordInput }
                             if (murid != null) {
                                 _loginResult.value = Result.success(UserModel(name = murid.nama, email = murid.email, role = "murid"))
                             } else {
-                                _loginResult.value = Result.failure(Exception("Akun murid tidak ditemukan"))
+                                _loginResult.value = Result.failure(Exception("Username atau password salah"))
                             }
                         }
                     }

@@ -1,5 +1,6 @@
 package com.example.simsekolah.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,11 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.simsekolah.R
 import com.example.simsekolah.adapter.BannerAdapter
 import com.example.simsekolah.adapter.TugasAdapter
 import com.example.simsekolah.data.model.TugasModel
 import com.example.simsekolah.databinding.FragmentHomeBinding
+import com.example.simsekolah.data.local.UserPreference
+import java.io.File
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
@@ -21,6 +27,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
+    private lateinit var userPreference: UserPreference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,22 +40,51 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userPreference = UserPreference(requireContext())
+        val user = userPreference.getUser()
+        binding.tvUsername.text = if (user.name.isNullOrEmpty()) "User" else user.name
+
+        setupAssignments()
+        setupBanner()
+        setupMenu()
+        loadProfileImage()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadProfileImage()
+    }
+
+    private fun loadProfileImage() {
+        val sharedPref = requireActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
+        val savedPath = sharedPref.getString("profile_path", null)
+        if (savedPath != null) {
+            val file = File(savedPath)
+            if (file.exists()) {
+                Glide.with(this)
+                    .load(file)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .placeholder(R.drawable.ic_profile)
+                    .circleCrop()
+                    .into(binding.ivProfile)
+            }
+        }
+    }
+
+    private fun setupAssignments() {
         val listDataTugas = listOf(
             TugasModel("Thursday, 22 April", "11:30", "Mathematics Exam", "Chapter 4: Algebra"),
             TugasModel("Friday, 23 April", "09:00", "English Essay", "Write about environment"),
             TugasModel("Monday, 26 April", "10:00", "Biology Quiz", "Human Anatomy")
         )
 
-        // 2. Hubungkan ke RecyclerView (rvTugas)
         val adapterTugas = TugasAdapter(listDataTugas)
         binding.rvTugas.apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context)
             adapter = adapterTugas
-            isNestedScrollingEnabled = false // Penting karena rvTugas di dalam ScrollView
-
+            isNestedScrollingEnabled = false
         }
-        setupBanner()
-        setupMenu()
     }
 
     private fun setupBanner() {
@@ -85,7 +121,8 @@ class HomeFragment : Fragment() {
 
     private fun setupMenu() {
         binding.menuAssignments.setOnClickListener {
-            findNavController().navigate(R.id.assignmentsFragment)
+            // Sesuaikan ID tujuan navigasi dengan nav_graph Anda jika perlu
+            // findNavController().navigate(R.id.action_home_to_assignments)
         }
 
         binding.menuEvent.setOnClickListener {
@@ -93,7 +130,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.menuFees.setOnClickListener {
-            findNavController().navigate(R.id.feesFragment)
+            // findNavController().navigate(R.id.feesFragment)
         }
 
         binding.ivProfile.setOnClickListener {
