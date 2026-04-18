@@ -14,11 +14,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.simsekolah.R
 import com.example.simsekolah.adapter.BannerAdapter
-import com.example.simsekolah.adapter.FeesImageAdapter
 import com.example.simsekolah.adapter.TugasAdapter
 import com.example.simsekolah.data.model.TugasModel
 import com.example.simsekolah.databinding.FragmentHomeBinding
 import com.example.simsekolah.data.local.UserPreference
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.File
 import kotlin.math.abs
 
@@ -29,6 +30,9 @@ class HomeFragment : Fragment() {
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
     private lateinit var userPreference: UserPreference
+    private val gson = Gson()
+    private val tugasList = mutableListOf<TugasModel>()
+    private lateinit var adapterTugas: TugasAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,15 +49,16 @@ class HomeFragment : Fragment() {
         val user = userPreference.getUser()
         binding.tvUsername.text = if (user.name.isNullOrEmpty()) "User" else user.name
 
-        setupAssignments()
         setupBanner()
         setupMenu()
         loadProfileImage()
+        setupAssignments()
     }
 
     override fun onResume() {
         super.onResume()
         loadProfileImage()
+        setupAssignments() // Muat ulang data setiap kali kembali ke Home
     }
 
     private fun loadProfileImage() {
@@ -74,17 +79,36 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupAssignments() {
-        val listDataTugas = listOf(
-            TugasModel("Thursday, 22 April", "11:30", "Mathematics Exam", "Chapter 4: Algebra"),
-            TugasModel("Friday, 23 April", "09:00", "English Essay", "Write about environment"),
-            TugasModel("Monday, 26 April", "10:00", "Biology Quiz", "Human Anatomy")
-        )
+        loadTugasData()
+        
+        // Filter: Hanya tampilkan tugas yang BELUM selesai (isDone == false)
+        val activeTugas = tugasList.filter { !it.isDone }
 
-        val adapterTugas = TugasAdapter(listDataTugas)
+        // Update Visibility "NO ASSIGNMENT"
+        if (activeTugas.isEmpty()) {
+            binding.tvNoAssignment.visibility = View.VISIBLE
+            binding.rvTugas.visibility = View.GONE
+        } else {
+            binding.tvNoAssignment.visibility = View.GONE
+            binding.rvTugas.visibility = View.VISIBLE
+        }
+
+        adapterTugas = TugasAdapter(activeTugas)
         binding.rvTugas.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterTugas
             isNestedScrollingEnabled = false
+        }
+    }
+
+    private fun loadTugasData() {
+        val sharedPref = requireActivity().getSharedPreferences("TugasPrefs", Context.MODE_PRIVATE)
+        val json = sharedPref.getString("list_tugas", null)
+        tugasList.clear()
+        if (json != null) {
+            val type = object : TypeToken<MutableList<TugasModel>>() {}.type
+            val savedList: MutableList<TugasModel> = gson.fromJson(json, type)
+            tugasList.addAll(savedList)
         }
     }
 

@@ -18,7 +18,7 @@ interface ApiService {
     suspend fun getJadwal(): BaseResponse<List<JadwalItem>>
 
     @GET("guru")
-    suspend fun getGuru(): BaseResponse<List<GuruItem>>
+    suspend fun getGuru(): GuruResponse
 
     @GET("siswa")
     suspend fun getSiswa(): BaseResponse<List<MuridItem>>

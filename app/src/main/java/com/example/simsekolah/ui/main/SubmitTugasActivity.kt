@@ -17,7 +17,6 @@ class SubmitTugasActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySubmitTugasBinding
     private var selectedFileUri: Uri? = null
-    private var photoUri: Uri? = null
 
     private val pickFileLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
@@ -54,13 +53,19 @@ class SubmitTugasActivity : AppCompatActivity() {
         tugasData?.let {
             binding.tvSubmitTitle.text = it.title
             binding.tvSubmitDeadline.text = "Deadline: ${it.deadline} - ${it.time}"
+            
+            // Tampilkan file lampiran dari guru jika ada
+            if (!it.fileName.isNullOrEmpty()) {
+                binding.cardTeacherFile.visibility = View.VISIBLE
+                binding.tvTeacherFileName.text = it.fileName
+            }
         }
 
         binding.btnBack.setOnClickListener { finish() }
         binding.btnCancel.setOnClickListener { finish() }
 
         binding.btnSelectFile.setOnClickListener {
-            pickFileLauncher.launch("application/pdf") // Filter PDF as example
+            pickFileLauncher.launch("*/*") 
         }
 
         binding.btnTakePhoto.setOnClickListener {
@@ -78,7 +83,6 @@ class SubmitTugasActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             
-            // Logic for uploading would go here
             Toast.makeText(this, "Assignment submitted successfully!", Toast.LENGTH_LONG).show()
             finish()
         }
